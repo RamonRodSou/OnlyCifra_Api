@@ -1,4 +1,5 @@
 import Cifra from "../models/Cifra"
+import * as yup from 'yup'
 
 class CifraController {
 
@@ -8,11 +9,30 @@ class CifraController {
   }
 
   async store(req, res) {
+    const schema = yup.object().shape({ 
+      title: yup.string().required(),
+      tom: yup.string().required(),
+      singer: yup.string().required(),
+      description: yup.string().required(),
+      Struct: yup.array().of(
+        yup.object().shape({
+          section: yup.string().required(),
+          content: yup.array().of(yup.string().required()).required(),
+        })
+      ).required(),
+      createdAt: yup.date().required(),
+      use_id: yup.string().required(),
+    })
+  
 
     console.log(req.body)
 
     const { title, tom, singer, Struct, description, createdAt } = req.body
     const { user_id } = req.headers
+
+    if (! ( await schema.isValid(req.body) )) {
+      return res.status(400).json({ error: 'Falha na Validação' })
+    }
 
     let cifra = await Cifra.findOne({ title, singer })
 
