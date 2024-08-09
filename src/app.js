@@ -1,5 +1,6 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import cors from 'cors'
 import routes from './routes'
 
 class App {
@@ -14,6 +15,10 @@ class App {
  }
 
  middlewares() {
+  this.server.use(cors()) // assim é liberado para qualquer um usar a API
+  //this.server.use(cors({origin:'onlyCifra.com.br'})) // assim apenas um unico domínio pode usar a API
+
+
   this.server.use(express.json())
  }1
 
